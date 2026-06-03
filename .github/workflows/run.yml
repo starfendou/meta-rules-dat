@@ -281,8 +281,10 @@ jobs:
 
       - name: Create meta-ruleset-mrs.zip
         run: |
+          sudo apt-get update
+          sudo apt-get install -y p7zip-full
           cd meta-rule
-          find . -type f -name '*.mrs' | zip -q -0 ../meta-rules-mrs.zip -@
+          7z a ../meta-rules-mrs.7z -mx=1 -r *.mrs
 
       - name: Move and zip files
         run: |
@@ -300,7 +302,7 @@ jobs:
           install -Dp ./geoip-lite.db ./publish/
           install -Dp ./geoip.metadb ./publish/
           install -Dp ./geoip-lite.metadb ./publish/
-          install -Dp ./meta-rules-mrs.zip ./publish/
+          install -Dp ./meta-rules-mrs.7z ./publish/
           cd ./publish || exit 1
           sha256sum country.mmdb > country.mmdb.sha256sum
           sha256sum country-lite.mmdb > country-lite.mmdb.sha256sum
@@ -314,7 +316,7 @@ jobs:
           sha256sum geoip-lite.db > geoip-lite.db.sha256sum
           sha256sum geoip.metadb > geoip.metadb.sha256sum
           sha256sum geoip-lite.metadb > geoip-lite.metadb.sha256sum
-          sha256sum meta-rules-mrs.zip > meta-rules-mrs.zip.sha256sum
+          sha256sum meta-rules-mrs.7z > meta-rules-mrs.7z.sha256sum
           sha256sum GeoLite2-ASN.mmdb > GeoLite2-ASN.mmdb.sha256sum
 
       - name: Delete release if exist then create release
